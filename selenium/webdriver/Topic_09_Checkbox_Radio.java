@@ -1,8 +1,9 @@
 package webdriver;
 
 
-import graphql.Assert;
+import org.testng.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -119,17 +120,35 @@ public class Topic_09_Checkbox_Radio {
             }
         }
     }
+
     @Test
     public void TC_05_Default_Login_Radio() {
         driver.get("https://login.ubuntu.com/");
 
-        By radioButton = By.cssSelector("input[value='login']");
-        By checkboxButton = By.cssSelector("input[type='checkbox']");
+        By radioButton = By.cssSelector("input#id_new_user");
+        By checkboxButton = By.cssSelector("input#id_accept_tos");
 
-        checkToElement(radioButton);
+        ((JavascriptExecutor)driver).executeScript("arguments[0].click();",
+                driver.findElement(radioButton));
+
         Assert.assertTrue(driver.findElement(radioButton).isSelected());
-//        Assert.assertTrue(driver.findElement(checkboxButton).isDisplayed());
+//        checkToElement(checkboxButton);
+//       Assert.assertTrue(driver.findElement(checkboxButton).isSelected());
+    }
 
+    @Test
+    public void TC_06_GG_Docs_Radio() {
+        driver.get("https://docs.google.com/forms/d/e/1FAIpQLSfiypnd69zhuDkjKgqvpID9kwO29UCzeCVrGGtbNPZXQok0jA/viewform");
+        By HanoiRadio = By.xpath("//div[@aria-label='Hà Nội']");
+
+        Assert.assertEquals(driver.findElement(HanoiRadio).getAttribute("aria-checked"), "false");
+        Assert.assertTrue(driver.findElement(By.xpath("//div[@aria-label='Hà Nội' and @aria-checked='false']")).isDisplayed());
+
+        ((JavascriptExecutor)driver).executeScript("arguments[0].click();",
+                driver.findElement(HanoiRadio));
+
+        Assert.assertEquals(driver.findElement(HanoiRadio).getAttribute("aria-checked"), "true");
+        Assert.assertTrue(driver.findElement(By.xpath("//div[@aria-label='Hà Nội' and @aria-checked='true']")).isDisplayed());
     }
 
 
