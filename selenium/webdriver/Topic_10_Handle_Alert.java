@@ -38,11 +38,11 @@ public class Topic_10_Handle_Alert {
 
         Alert alert = explicitWait.until(ExpectedConditions.alertIsPresent());
 
-        Assert.assertEquals(alert.getText(),"I am a JS Alert");
+        Assert.assertEquals(alert.getText(), "I am a JS Alert");
 
         alert.accept();
 
-        Assert.assertEquals(driver.findElement(By.cssSelector("p#result")).getText(),"You clicked an alert successfully");
+        Assert.assertEquals(driver.findElement(By.cssSelector("p#result")).getText(), "You clicked an alert successfully");
     }
 
     @Test
@@ -53,11 +53,11 @@ public class Topic_10_Handle_Alert {
 
         Alert alert = explicitWait.until(ExpectedConditions.alertIsPresent());
 
-        Assert.assertEquals(alert.getText(),"I am a JS Confirm");
+        Assert.assertEquals(alert.getText(), "I am a JS Confirm");
 
         alert.dismiss();
 
-        Assert.assertEquals(driver.findElement(By.cssSelector("p#result")).getText(),"You clicked: Cancel");
+        Assert.assertEquals(driver.findElement(By.cssSelector("p#result")).getText(), "You clicked: Cancel");
     }
 
     @Test
@@ -68,7 +68,7 @@ public class Topic_10_Handle_Alert {
 
         Alert alert = explicitWait.until(ExpectedConditions.alertIsPresent());
 
-        Assert.assertEquals(alert.getText(),"I am a JS prompt");
+        Assert.assertEquals(alert.getText(), "I am a JS prompt");
 
         String text = "Hau Travel";
 
@@ -76,23 +76,43 @@ public class Topic_10_Handle_Alert {
 
         alert.accept();
 
-        Assert.assertEquals(driver.findElement(By.cssSelector("p#result")).getText(),"You entered: " + text);
+        Assert.assertEquals(driver.findElement(By.cssSelector("p#result")).getText(), "You entered: " + text);
     }
 
     @Test
-    public void TC_04_Alert_Authencation() {
-        driver.get("http://admin:admin@the-internet.herokuapp.com/basic_auth");
+    public void TC_04_Alert_Authencation_Pass_Url() {
+        String username = "admin";
+        String password = "admin";
+
+        // Cách 1 truyền username và pass thẳng vào Url
+//        driver.get("http://" + username + ":" + password + "@" + "the-internet.herokuapp.com/basic_auth");
+//        Assert.assertTrue(driver.findElement(By.xpath("//p[contains(text(),'Congratulations! You must have the proper credentials.')]")).isDisplayed());
+
+        // Từ page A thao tác lên 1 element để chuyển qua page B
+        driver.get("http://the-internet.herokuapp.com/");
+
+        String authenlinkUrl = driver.findElement(By.xpath("//a[text()='Basic Auth']")).getAttribute("href");
+
+//        String authenArray[] = authenlinkUrl.split("//");
+//        driver.get(authenArray[0] + "//" + username + ":" + password + "@" + authenArray[1]);
+
+        driver.get(getAuthenAlertByUrl(authenlinkUrl, username, password));
 
         Assert.assertTrue(driver.findElement(By.xpath("//p[contains(text(),'Congratulations! You must have the proper credentials.')]")).isDisplayed());
 
+
     }
-
-
 
 
     @AfterClass
     public void afterClass() {
         //driver.quit();
+    }
+
+    public String getAuthenAlertByUrl(String url, String username, String password) {
+        String[] authenArray = url.split("//");
+        return authenArray[0] + "//" + username + ":" + password + "@" + authenArray[1];
+
     }
 
     public void sleepInSeconds(long timInSecond) {
