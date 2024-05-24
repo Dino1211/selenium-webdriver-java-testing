@@ -1,7 +1,13 @@
 package webdriver;
 
 
+import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.HasDevTools;
+import org.openqa.selenium.devtools.v85.network.Network;
+import org.openqa.selenium.devtools.v85.network.model.Headers;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,7 +17,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class Topic_10_Handle_Alert {
@@ -22,6 +31,7 @@ public class Topic_10_Handle_Alert {
     @BeforeClass
     public void beforeClass() {
 
+        //driver = new ChromeDriver();
         driver = new FirefoxDriver();
 
         explicitWait = new WebDriverWait(driver, Duration.ofSeconds(30));
@@ -99,14 +109,35 @@ public class Topic_10_Handle_Alert {
         driver.get(getAuthenAlertByUrl(authenlinkUrl, username, password));
 
         Assert.assertTrue(driver.findElement(By.xpath("//p[contains(text(),'Congratulations! You must have the proper credentials.')]")).isDisplayed());
-
-
     }
+
+    @Test
+    /*public void TC_06_Authencation_Alert_CDP() {
+        // Get DevTool object
+        DevTools devTools = ((HasDevTools) driver).getDevTools();
+
+        // Start new session
+        devTools.createSession();
+
+        // Enable the Network domain of devtools
+        devTools.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty()));
+
+        // Encode username/ password
+        Map<String, Object> headers = new HashMap<String, Object>();
+        String basicAuthen = "Basic " + new String(new Base64().encode(String.format("%s:%s", "admin", "admin").getBytes()));
+        headers.put("Authorization", basicAuthen);
+
+        // Set to Header
+        devTools.send(Network.setExtraHTTPHeaders(new Headers(headers)));
+
+        driver.get("https://the-internet.herokuapp.com/basic_auth");
+    }*/
+
 
 
     @AfterClass
     public void afterClass() {
-        //driver.quit();
+        driver.quit();
     }
 
     public String getAuthenAlertByUrl(String url, String username, String password) {
