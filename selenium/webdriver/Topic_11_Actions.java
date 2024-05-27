@@ -1,14 +1,12 @@
 package webdriver;
 
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -96,7 +94,6 @@ public class Topic_11_Actions {
         allNumberTextExpected.add("9");
         allNumberTextExpected.add("10");
         allNumberTextExpected.add("11");
-
         // Tổng các số đã chọn
         List<WebElement> allNumbersSelected = driver.findElements(By.cssSelector("li.ui-state-default.ui-selected"));
         Assert.assertEquals(allNumbersSelected.size(), 9);
@@ -107,8 +104,8 @@ public class Topic_11_Actions {
             allNumbersTextActual.add(element.getText());
         }
         Assert.assertEquals(allNumberTextExpected, allNumbersTextActual);
-
     }
+
 
 
     @AfterClass
