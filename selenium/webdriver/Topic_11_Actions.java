@@ -1,11 +1,8 @@
 package webdriver;
 
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -19,13 +16,14 @@ import java.util.List;
 public class Topic_11_Actions {
     WebDriver driver;
     Actions actions;
+    JavascriptExecutor javascriptExecutor;
 
 
     @BeforeClass
     public void beforeClass() {
 
-        //driver = new ChromeDriver();
-        driver = new FirefoxDriver();
+        driver = new ChromeDriver();
+//        driver = new FirefoxDriver();
         actions = new Actions(driver);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         driver.manage().window().maximize();
@@ -75,15 +73,12 @@ public class Topic_11_Actions {
     @Test
     public void TC_04_Click_and_Hold() {
         driver.get("https://automationfc.github.io/jquery-selectable/");
-
         List<WebElement> allNumbers = driver.findElements(By.cssSelector("li.ui-state-default"));
         Assert.assertEquals(allNumbers.size(), 20);
-
         actions.clickAndHold(allNumbers.get(0))
                 .moveToElement(allNumbers.get(10))
                 .release().perform();
         sleepInSeconds(2);
-
         List<String> allNumberTextExpected = new ArrayList<String>();
         allNumberTextExpected.add("1");
         allNumberTextExpected.add("2");
@@ -95,25 +90,43 @@ public class Topic_11_Actions {
         allNumberTextExpected.add("10");
         allNumberTextExpected.add("11");
         // Tổng các số đã chọn
-        List<WebElement> allNumbersSelected = driver.findElements(By.cssSelector("li.ui-state-default.ui-selected"));
-        Assert.assertEquals(allNumbersSelected.size(), 9);
-
+        List<WebElement> allNumbersClickandHold = driver.findElements(By.cssSelector("li.ui-state-default.ui-selected"));
+        Assert.assertEquals(allNumbersClickandHold.size(), 9);
         List<String> allNumbersTextActual = new ArrayList<String>();
-
-        for (WebElement element : allNumbersSelected) {
+        for (WebElement element : allNumbersClickandHold) {
             allNumbersTextActual.add(element.getText());
         }
         Assert.assertEquals(allNumberTextExpected, allNumbersTextActual);
     }
 
+    @Test
+    public void TC_05_Click_and_Select() {
+        driver.get("https://automationfc.github.io/jquery-selectable/");
+        List<WebElement> selectNumbers = driver.findElements(By.cssSelector("li.ui-state-default"));
+        Assert.assertEquals(selectNumbers.size(), 20);
+        actions.keyDown(Keys.CONTROL).perform();
+        actions.click(selectNumbers.get(0))
+                .click(selectNumbers.get(2))
+                .click(selectNumbers.get(4))
+                .click(selectNumbers.get(6))
+                .keyUp(Keys.CONTROL).perform();
+        List<WebElement> allNumbersSelected = driver.findElements(By.cssSelector("li.ui-state-default.ui-selected"));
+        Assert.assertEquals(allNumbersSelected.size(), 4);
+    }
 
+    @Test
+    public void TC_06_Double_Click() {
+        driver.get("https://automationfc.github.io/basic-form/index.html");
+
+        actions.doubleClick(driver.findElement(By.xpath("//button[text()='Double click me']"))).perform();
+
+        Assert.assertEquals(driver.findElement(By.xpath("//p[text()='Hello Automation Guys!']")).getText(), "Hello Automation Guys!");
+    }
 
     @AfterClass
     public void afterClass() {
         driver.quit();
     }
-
-
     public void sleepInSeconds(long timInSecond) {
         try {
             Thread.sleep(timInSecond * 1000);
@@ -121,6 +134,4 @@ public class Topic_11_Actions {
             throw new RuntimeException(e);
         }
     }
-
-
 }
