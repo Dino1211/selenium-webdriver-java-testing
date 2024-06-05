@@ -91,6 +91,47 @@ public class Topic_12_Popup {
         Assert.assertEquals(driver.findElements(By.xpath("//div[text()='Sign Up']/parent::div/parent::div")).size(), 0);
     }
 
+    @Test
+    public void TC_05_Random_Popup_InDom1() {
+        driver.get("https://www.javacodegeeks.com/");
+        sleepInSeconds(30);
+        By javacodePopup = By.cssSelector("div.lepopup-popup-container>div:not([style^='display:none'])");
+        if (driver.findElements(javacodePopup).size() > 0 && driver.findElements(javacodePopup).get(0).isDisplayed()) {
+            System.out.println("Popup hiển thị");
+            driver.findElement(By.cssSelector("div.lepopup-popup-container>div:not([style^='display:none']) div.lepopup-fadeIn div a")).click();
+            sleepInSeconds(2);
+        }
+        driver.findElement(By.cssSelector("input#search-input")).sendKeys("Agile Testing Explained");
+        driver.findElement(By.cssSelector("button#search-submit")).click();
+        sleepInSeconds(2);
+        Assert.assertEquals(driver.findElement(By.xpath("//a[text()='Agile Testing Explained']")).getText(), "Agile Testing Explained");
+    }
+
+    @Test
+    public void TC_06_Random_Popup_InDom2() {
+        driver.get("https://vnk.edu.vn/");
+        sleepInSeconds(15);
+        By marketingPopup = By.cssSelector("div.thrv_wrapper.thrv-columns div.tve-content-box-background");
+        if(driver.findElement(marketingPopup).isDisplayed()){
+            driver.findElement(By.cssSelector("svg.tcb-icon")).click();
+            System.out.println("Popup hiển thị");
+
+        }
+        else {
+            System.out.println("Popup ko hiển thị");
+        }
+    }
+
+    @Test
+    public void TC_07_Random_Popup_NotInDom() {
+        driver.get("https://dehieu.vn/");
+        sleepInSeconds(10);
+        if(driver.findElement(By.cssSelector("div.css-modal-bt")).isDisplayed()){
+            driver.findElement(By.cssSelector("button.close")).click();
+        }
+
+    }
+
 
     @AfterClass
     public void afterClass() {
