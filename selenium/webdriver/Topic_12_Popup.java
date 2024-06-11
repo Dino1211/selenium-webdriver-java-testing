@@ -2,6 +2,7 @@ package webdriver;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
@@ -112,12 +113,11 @@ public class Topic_12_Popup {
         driver.get("https://vnk.edu.vn/");
         sleepInSeconds(15);
         By marketingPopup = By.cssSelector("div.thrv_wrapper.thrv-columns div.tve-content-box-background");
-        if(driver.findElement(marketingPopup).isDisplayed()){
+        if (driver.findElement(marketingPopup).isDisplayed()) {
             driver.findElement(By.cssSelector("svg.tcb-icon")).click();
             System.out.println("Popup hiển thị");
 
-        }
-        else {
+        } else {
             System.out.println("Popup ko hiển thị");
         }
     }
@@ -126,10 +126,15 @@ public class Topic_12_Popup {
     public void TC_07_Random_Popup_NotInDom() {
         driver.get("https://dehieu.vn/");
         sleepInSeconds(10);
-        if(driver.findElement(By.cssSelector("div.css-modal-bt")).isDisplayed()){
-            driver.findElement(By.cssSelector("button.close")).click();
+        if (driver.findElement(By.cssSelector("div.css-modal-bt")).isDisplayed()) {
+            int heightBrowser = driver.manage().window().getSize().getHeight();
+            if (heightBrowser < 1920) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", driver.findElement(By.cssSelector("button.close")));
+            } else {
+                driver.findElement(By.cssSelector("button.close")).click();
+            }
+            sleepInSeconds(5);
         }
-
     }
 
 
